@@ -1,0 +1,17 @@
+[Unit]
+Description=OAuth2 Proxy Service
+After=network-online.target
+Requires=oauth2-proxy.service
+Wants=network-online.target
+
+[Service]
+Restart=Always
+User=root
+Group=docker
+WorkindDirectory=/opt/oauth2-proxy
+ExecStartPre=docker compose down
+ExecStart=docker compose up
+ExecStop=docker compose down
+
+[Install]
+WantedBy=multi-user.target

@@ -31,22 +31,35 @@ rm /etc/nginx/sites-enabled/default
 
 Before proceeding any further with the Nginx config, you must first setup the OAuth2 service OAuth2 Proxy as described below.
 
-5. Generate secret keys for OAuth2 Proxy
+5. Install OAuth2 Proxy
 
 ```bash
-cd oauth2-proxy
-python3 -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(32)).decode())' > oauth_client_secret.env
-python3 -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(32)).decode())' > secure_cookie_secret.env
+cp -r oauth2-proxy /opt/
+cp /opt/oauth2-proxy/oauth2-proxy.socket /etc/systemd/system
+cp /opt/oauth2-proxy/oauth2-proxy.service /etc/systemd/system
 ```
 
-6. Install and enable the OAuth2 Proxy Socket
+6. Generate secret keys for OAuth2 Proxy
 
 ```bash
-cp oauth2-proxy.socket /etc/systemd/system
-systemctl enable --now oauth2-proxy.socket
+python3 -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(32)).decode())' > /opt/oauth2-proxy/oauth_client_secret.env
+python3 -c 'import os,base64; print(base64.urlsafe_b64encode(os.urandom(32)).decode())' > /opt/oauth2-proxy/secure_cookie_secret.env
 ```
 
-7. Launch OAuth2 Proxy
+7. Configure OAuth2 Proxy
+
+```bash
+sed -i 's/^client_id =.*$/client_id = <YOUR_OAUTH2_CLIENT_ID>/' /opt/oauth2-proxy/config/oauth2-proxy.cfg
+sed -i 's/^cookie_domains =.*$/cookie_domains = <subdomains.domain.tld>/' /opt/oauth2-proxy/config/oauth2-proxy.cfg
+```
+
+8. Launch OAuth2 Proxy
+
+```bash
+systemctl enable --now oauth2-proxy.service
+```
+
+Now the Nginx setup can be completed.
 
 ### Recommendations
 
