@@ -1,0 +1,10 @@
+location /simple-site {
+    alias /var/www/simple-site/;
+    include /etc/nginx/proxy_params;
+
+    # display directory listings
+    # Be carefule when using this, it can leak info
+    autoindex on;
+
+    try_files $uri $uri/ =404;
+}

@@ -1,0 +1,2 @@
+proxy_set_header $http_upgrade;
+proxy_set_header Connection "Upgrade";

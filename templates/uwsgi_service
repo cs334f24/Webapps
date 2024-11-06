@@ -1,0 +1,11 @@
+location /your-uwsgi-app {
+    include /etc/nginx/uwsgi_params;
+
+    uwsgi_pass unix:///var/run/your_app.sock;
+}
+
+location /your-uwsgi-app/static {
+    alias /var/www/your_app/;
+
+    try_files $uri $uri/ =404;
+}

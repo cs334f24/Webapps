@@ -1,0 +1,17 @@
+location /upload-service {
+    include /etc/nginx/proxy_params;
+    include /etc/nginx/webapps-mixins/oauth;
+
+    proxy_pass http://127.0.0.1:2021;
+}
+
+location /upload-service/upload {
+    include /etc/nginx/proxy_params;
+    include /etc/nginx/webapps-mixins/oauth;
+
+    # increase the max request body size that can be sent through nginx to the proxied service
+    # care should be taken when uploading large files
+    client_max_body_size 300M;
+
+    proxy_pass http://127.0.0.1:2021;
+}
